@@ -1,0 +1,5 @@
+# Ignore artifacts:
+*-lock.*
+/node_modules/**
+build
+coverage
