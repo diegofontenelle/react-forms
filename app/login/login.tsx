@@ -8,7 +8,7 @@ const FORM_FIELDS = [
   {
     name: "email",
     label: "Email",
-    placeholder: "you_best@email.com",
+    placeholder: "your_best@email.com",
   },
   {
     name: "password",
