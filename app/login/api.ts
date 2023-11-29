@@ -1,6 +1,6 @@
 import { User, UserApiResponse } from "./types"
 
-function validateFormData(user: User): boolean {
+export function validateFormData(user: User): boolean {
   if (user?.email.split("@").length < 2) {
     return false
   }
@@ -11,10 +11,9 @@ function validateFormData(user: User): boolean {
   return true
 }
 
-export async function createUserApi(user: User): Promise<UserApiResponse> {
-  console.log(user)
-
+export const createUserApi = async (user: User): Promise<UserApiResponse> => {
   if (validateFormData(user)) {
+    console.log(user)
     const response: UserApiResponse = await new Promise((resolve) => {
       console.log(resolve)
       setTimeout(() => {

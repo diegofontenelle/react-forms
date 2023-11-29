@@ -28,7 +28,7 @@ export function Login() {
     const formData = new FormData(event.currentTarget)
     const user = Object.fromEntries(formData) as User
 
-    console.log(user, formData)
+    console.log(user)
 
     createUserApi(user)
   }

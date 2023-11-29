@@ -1,7 +1,16 @@
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import "@testing-library/jest-dom"
 import { Login } from "./login"
+import * as api from "./api"
+
+jest.mock("./api", () => ({
+  ...jest.requireActual("./api"),
+  createUserApi: jest.fn((e) => e),
+}))
+
+const email = "diego@gmail.com"
+const password = "password"
 
 describe("Login", () => {
   it("renders with email, password and confirm password fields", () => {
@@ -11,25 +20,22 @@ describe("Login", () => {
     expect(screen.getByText(/^password$/i)).toBeInTheDocument()
     expect(screen.getByText(/confirm password/i)).toBeInTheDocument()
   })
-  it("allows typing on all fields", () => {
+  it("submits, with correct values", async () => {
     userEvent.setup()
-    const email = "diego@gmail.com"
-    const password = "password"
+    const spy = jest.spyOn(api, "createUserApi")
     render(<Login />)
 
-    userEvent.type(screen.getByPlaceholderText("your_best@email.com"), email)
-    userEvent.type(
-      screen.getByPlaceholderText("super secret password"),
-      password,
-    )
-    userEvent.type(
-      screen.getByPlaceholderText("confirm super secret password"),
-      password,
-    )
+    await userEvent.type(screen.getByTestId("email"), email)
+    await userEvent.type(screen.getByTestId("password"), password)
+    await userEvent.type(screen.getByTestId("confirm-password"), password)
 
-    waitFor(() => {
-      expect(screen.getByDisplayValue(email)).toBeInTheDocument()
-      expect(screen.getAllByDisplayValue(password)).toHaveLength(2)
+    await userEvent.click(screen.getByText(/submit/i))
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith({
+      email,
+      password,
+      "confirm-password": password,
     })
   })
 })
